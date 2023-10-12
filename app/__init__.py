@@ -30,4 +30,4 @@ app.register_blueprint(errors_bp)
 
 # app.register_blueprint(auth_bp)
 
-from app import routers
+from app import routers, api_views

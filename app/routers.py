@@ -6,6 +6,7 @@ from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.forms import BuildingForm
 from app.models import Building
+from constants import SLEEP
 
 
 @app.route("/")
@@ -27,7 +28,7 @@ def show_result(pk: int):
 
 def send_request(number, latitude, longitude):
     """Эмуляция запроса на сервер."""
-    time.sleep(3)  # Задержка запроса(до 60 сек)
+    time.sleep(SLEEP)  # Задержка запроса(до 60 сек)
     x = random.choice(["True", "False"])
     return x
 
@@ -45,7 +46,7 @@ def create_request():
             number=number,
             latitude=latitude,
             longitude=longitude,
-            answer=result
+            answer=result,
         )
         db.session.add(building)
         db.session.commit()
@@ -55,6 +56,7 @@ def create_request():
 
 @app.route("/ping", methods=["GET"])
 def check_server():
+    """Проверка работоспособности сервера."""
     if send_request(number=None, longitude=None, latitude=None):
         return render_template("ping.html", context="Работает")
     return render_template("ping.html", context="Не работает")
