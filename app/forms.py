@@ -6,8 +6,8 @@ from wtforms.validators import DataRequired
 class BuildingForm(FlaskForm):
     """Форма для поиска здания по заданным данным."""
 
-    number = StringField(
-        "Вид кадастрового номера: ХХ: ХХ: ХХХХХХХ: ХХ",
+    number = IntegerField(
+        "Примерный вид кадастрового номера: ХХ: ХХ: ХХХХХХХ: ХХ",
         validators=[
             DataRequired(message="Поле обязательное!"),
         ]

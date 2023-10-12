@@ -8,13 +8,13 @@ class Building(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(
-        db.BigInteger, unique=True, index=True, nullable=False
+        db.BigInteger, index=True, nullable=False
     )
     latitude = db.Column(
-        db.String, unique=True, nullable=False
+        db.String, index=True, nullable=False
     )
     longitude = db.Column(
-        db.String, unique=True, nullable=False
+        db.String, index=True, nullable=False
     )
     timestamp = db.Column(
         db.DateTime, default=datetime.now

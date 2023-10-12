@@ -1,19 +1,22 @@
 import random
+import time
 
 from flask import render_template, flash, redirect, url_for
 
-from app import app
+from app import app, db
 from app.forms import BuildingForm
 from app.models import Building
 
 
 @app.route("/")
 def index():
+    """Главная страница."""
     return render_template("index.html")
 
 
 @app.route("/result/<int:pk>", methods=["GET"])
 def show_result(pk: int):
+    """Отрисовка ответа."""
     building = Building.query.get(pk)
     if building:
         return render_template("result.html", building=building)
@@ -23,33 +26,35 @@ def show_result(pk: int):
 
 
 def send_request(number, latitude, longitude):
-    # Здесь эмулируется отправка запроса на внешний сервер
-    # Вместо этого места вставьте код, который отправляет запрос и получает ответ
-    # Вместо этого места также можете добавить задержку,
-    # чтобы эмулировать обработку запроса на внешнем сервере
-    # В данном примере просто возвращается случайное значение true или false
-    return random.choice([True, False])
+    """Эмуляция запроса на сервер."""
+    time.sleep(3)  # Задержка запроса(до 60 сек)
+    x = random.choice(["True", "False"])
+    return x
 
 
 @app.route("/query", methods=["GET", "POST"])
 def create_request():
+    """Форма создания запроса и отправка его на сервер."""
     form = BuildingForm()
     if form.validate_on_submit():
-        print("\n\n\n\n\n\n\n\n")
         number = form.number.data
         latitude = form.latitude.data
         longitude = form.longitude.data
-        building = Building.query.filter_by(
+        result = send_request(number, latitude, longitude)
+        building = Building(
             number=number,
             latitude=latitude,
-            longitude=longitude
-        ).first()
-        result = send_request(number, latitude, longitude)
-        if result:
-            return redirect(url_for("show_view", pk=building.id))
-        else:
-            flash("Данные не найдены", "danger")
+            longitude=longitude,
+            answer=result
+        )
+        db.session.add(building)
+        db.session.commit()
+        return redirect(url_for("show_result", pk=building.id))
     return render_template("query.html", form=form)
 
 
-
+@app.route("/ping", methods=["GET"])
+def check_server():
+    if send_request(number=None, longitude=None, latitude=None):
+        return render_template("ping.html", context="Работает")
+    return render_template("ping.html", context="Не работает")
