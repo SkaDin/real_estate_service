@@ -1,16 +1,14 @@
-from http import HTTPStatus
-
 from flask import render_template, jsonify
 
 from app import db
-from constants import NOT_FOUND, INTERNAL_SERVER_ERROR, FORBIDDEN
+from constants import NOT_FOUND, INTERNAL_SERVER_ERROR
 from errors import bp
 
 
 class InvalidAPIUsage(Exception):
     """Кастомный класс ошибок."""
 
-    status_code = HTTPStatus.NOT_FOUND
+    status_code = NOT_FOUND
 
     def __init__(self, message, status_code=None):
         super().__init__()
@@ -30,15 +28,10 @@ def invalid_api_usage(error):
 
 @bp.app_errorhandler(NOT_FOUND)
 def page_not_found(error):  # noqa
-    return render_template("404.html"), HTTPStatus.NOT_FOUND
+    return render_template("404.html"), NOT_FOUND
 
 
 @bp.app_errorhandler(INTERNAL_SERVER_ERROR)
 def internal_error(error):  # noqa
     db.session.rollback()
-    return render_template("500.html"), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-@bp.app_errorhandler(FORBIDDEN)
-def forbidden_error(error):  # noqa
-    return render_template("403.html"), HTTPStatus.FORBIDDEN
+    return render_template("500.html"), INTERNAL_SERVER_ERROR

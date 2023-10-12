@@ -1,5 +1,7 @@
+import csv
 import random
 import time
+from datetime import datetime
 
 from flask import render_template, flash, redirect, url_for
 
@@ -26,11 +28,11 @@ def show_result(pk: int):
         return redirect(url_for("index"))
 
 
-def send_request(number, latitude, longitude):
+def send_request(number, latitude, longitude):  # noqa
     """Эмуляция запроса на сервер."""
     time.sleep(SLEEP)  # Задержка запроса(до 60 сек)
-    x = random.choice(["True", "False"])
-    return x
+    response = random.choice(["True", "False"])
+    return response
 
 
 @app.route("/query", methods=["GET", "POST"])
@@ -59,4 +61,21 @@ def check_server():
     """Проверка работоспособности сервера."""
     if send_request(number=None, longitude=None, latitude=None):
         return render_template("ping.html", context="Работает")
+    time.sleep(SLEEP)
     return render_template("ping.html", context="Не работает")
+
+
+@app.cli.command("load_data")
+def load_test_data():
+    """Создание тестовых данных."""
+    db.create_all()
+    with open("data.csv", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            timestamp = datetime.strptime(
+                row["timestamp"], "%Y-%m-%d%H:%M:%S.%f"  # noqa
+            )
+            row["timestamp"] = timestamp  # noqa
+            data = Building(**row)  # noqa
+            db.session.add(data)
+            db.session.commit()

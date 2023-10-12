@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, StringField
+from wtforms import SubmitField, IntegerField, FloatField
 from wtforms.validators import DataRequired
 
 
@@ -12,16 +12,14 @@ class BuildingForm(FlaskForm):
             DataRequired(message="Поле обязательное!"),
         ],
     )
-    latitude = StringField(
+    latitude = FloatField(
         "Широта",
-        validators=[
-            DataRequired(message="Поле обязательное!"),
-        ],
+        validators=[DataRequired(message="Поле обязательное, числовое!")],
     )
-    longitude = StringField(
+    longitude = FloatField(
         "Долгота",
         validators=[
-            DataRequired(message="Поле обязательное!"),
+            DataRequired(message="Поле обязательное, числовое!"),
         ],
     )
     submit = SubmitField("Узнать")
