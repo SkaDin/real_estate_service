@@ -20,5 +20,11 @@ class Building(db.Model):
             latitude=self.latitude,
             longitude=self.longitude,
             date=self.timestamp,
-            answer=self.answer,
+            answer_server=self.answer,
         )
+
+    def from_dict(self, data: dict):
+        """Метод-десериализатор."""
+        for field in ["number", "latitude", "longitude", "answer"]:
+            if field in data:
+                setattr(self, field, data[field])

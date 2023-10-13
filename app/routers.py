@@ -1,14 +1,12 @@
 import csv
 import random
-import time
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, redirect, url_for
 
 from app import app, db
 from app.forms import BuildingForm
 from app.models import Building
-from constants import SLEEP
 
 
 @app.route("/")
@@ -21,16 +19,11 @@ def index():
 def show_result(pk: int):
     """Отрисовка ответа."""
     building = Building.query.get(pk)
-    if building:
-        return render_template("result.html", building=building)
-    else:
-        flash("Запрос не найден", "danger")
-        return redirect(url_for("index"))
+    return render_template("result.html", building=building)
 
 
 def send_request(number, latitude, longitude):  # noqa
     """Эмуляция запроса на сервер."""
-    time.sleep(SLEEP)  # Задержка запроса(до 60 сек)
     response = random.choice(["True", "False"])
     return response
 
@@ -61,7 +54,6 @@ def check_server():
     """Проверка работоспособности сервера."""
     if send_request(number=None, longitude=None, latitude=None):
         return render_template("ping.html", context="Работает")
-    time.sleep(SLEEP)
     return render_template("ping.html", context="Не работает")
 
 

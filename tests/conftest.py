@@ -1,9 +1,8 @@
 import pytest
 
 from dotenv import load_dotenv
-from mixer.backend.flask import mixer as _mixer
 
-from app import app
+from app import app, db
 
 load_dotenv()
 
@@ -14,17 +13,21 @@ def default_app():
         yield app
 
 
-@pytest.fixture()
-def client(default_app):
-    return default_app.test_client()
-
-
-@pytest.fixture()
-def runner(default_app):
-    return default_app.test_cli_runner()
+@pytest.fixture
+def _app():
+    with app.app_context():
+        app.config.update(
+            {
+                "TESTING": True,
+                "WTF_CSRF_ENABLED": False,
+            }
+        )
+        db.create_all()
+        yield app
+        db.drop_all()
+        db.session.close()
 
 
 @pytest.fixture
-def mixer():
-    _mixer.init_app(app)
-    return _mixer
+def client(_app):
+    return _app.test_client()
