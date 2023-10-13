@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, FloatField
-from wtforms.validators import DataRequired
+from wtforms import SubmitField, IntegerField, StringField
+from wtforms.validators import DataRequired, Regexp
 
 
 class BuildingForm(FlaskForm):
@@ -12,14 +12,18 @@ class BuildingForm(FlaskForm):
             DataRequired(message="Поле обязательное!"),
         ],
     )
-    latitude = FloatField(
+    latitude = StringField(
         "Широта",
-        validators=[DataRequired(message="Поле обязательное, числовое!")],
+        validators=[
+            DataRequired(message="Поле обязательное"),
+            Regexp(r"^-?\d{1,2}+.\d{6}$", message="Некорректный формат"),
+        ],
     )
-    longitude = FloatField(
+    longitude = StringField(
         "Долгота",
         validators=[
-            DataRequired(message="Поле обязательное, числовое!"),
+            DataRequired(message="Поле обязательное"),
+            Regexp(r"^-?\d{1,2}+.\d{6}$", message="Некорректный формат"),
         ],
     )
     submit = SubmitField("Узнать")

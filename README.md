@@ -39,9 +39,22 @@ SECRET_KEY=My_favorite_micro-framework_is_FLASK!
 BASIC_AUTH_USERNAME=Admin
 BASIC_AUTH_PASSWORD=Admin007
 ```
+* #### *Для получения отчёта о покрытии приложения тестами можно воспользоваться командой:*
+```commandline
+coverage run -m pytest
+coverage report
+```
+* #### *Сами тесты запускаются командой:*
+```commandline
+python -m pytest -W ignore
+```
 * #### *Добавить несколько тестовых записей в базу данных:*
 ```commandline
 flask load_data
+```
+* #### *Запуск приложения:*
+```commandline
+flask run
 ```
 * #### *Автор: SkaDin(Денис Сушков)*
 

@@ -18,6 +18,7 @@ flask-wtf = "^1.2.1"
 flask-admin = "^1.6.0"
 pytest = "^7.4.2"
 pytest-env = "^1.0.1"
+coverage = "^7.3.2"
 
 
 [build-system]

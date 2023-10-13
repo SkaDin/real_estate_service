@@ -1,4 +1,5 @@
 import csv
+import click
 import random
 from datetime import datetime
 
@@ -71,3 +72,4 @@ def load_test_data():
             data = Building(**row)  # noqa
             db.session.add(data)
             db.session.commit()
+    click.echo("Данные загружены")

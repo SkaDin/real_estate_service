@@ -2,10 +2,21 @@ import pytest
 
 from dotenv import load_dotenv
 
-from app import app, db
-from app.models import Building
-
 load_dotenv()
+
+try:
+    from app import app, db
+    from app.models import Building
+except NameError:
+    raise AssertionError(
+        "Не обнаружен объект приложения. Создайте экземпляр класса Flask и назовите его app.",
+    )
+except ImportError as exc:
+    if any(obj in exc.name for obj in ["models", "Building"]):
+        raise AssertionError("В файле models не найдена модель Building")
+    raise AssertionError(
+        "Не обнаружен объект класса SQLAlchemy. Создайте его и назовите db."
+    )
 
 
 @pytest.fixture()
@@ -25,7 +36,7 @@ def _app():
         )
         db.create_all()
         yield app
-        # db.drop_all()
+        db.drop_all()
         db.session.close()
 
 

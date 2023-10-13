@@ -8,7 +8,7 @@ from app.models import Building
 from errors.error_handlers import InvalidAPIUsage
 
 
-@app.route("/api/history/<int:number>/", methods=["GET"])
+@app.route("/api/history/<int:number>", methods=["GET"])
 def get_history_by_number(number: int):
     """Вывод истории по кадастровому номеру."""
     history_objs = Building.query.filter_by(number=number).all()
