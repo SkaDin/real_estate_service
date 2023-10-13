@@ -18,7 +18,7 @@ def get_history_by_number(number: int):
     raise InvalidAPIUsage("Запроса с таким номером не было", NOT_FOUND)
 
 
-@app.route("/api/history/", methods=["GET"])
+@app.route("/api/history", methods=["GET"])
 def get_all_history():
     """Вывод истории всех запросов."""
     stories = Building.query.all()

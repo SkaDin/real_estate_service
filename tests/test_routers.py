@@ -13,53 +13,49 @@ def test_page_index_get(client):
     ), "POST-запрос к главной странице запрещён"
 
 
-def test_page_create_request(client):
+def test_page_create_request(client, data_model, query_data):
     response = client.get("/query")
     assert (
         response.status_code == OK
-    ), "GET-запрос к эндпоинту '/query' должен возвращать статус `200`."
+    ), "GET-запрос к странице '/query' должен возвращать статус `200`."
     assert (
         b"form" in response.data
     ), "Нет формы в контексте страницы '/query'."
 
     response = client.post(
         "/query",
-        data={
-            "number": 3225003164320,
-            "latitude": 53.248659,
-            "longitude": 34.35526,
-        },
+        data=query_data,
     )
     assert (
         response.status_code == FOUND
     ), "После отправки формы страница '/query' должна возвращать статус `302`."
-    query_data = Building.query.filter_by(number=3225003164320).first()
+    query_data = Building.query.filter_by(number=data_model.number).first()
 
     assert (
         query_data.id
     ), "После отправки формы в базе данных должна создаваться новая запись."
 
 
-def test_page_show_result(client):
-    response = client.get(f"/result/1")
+def test_page_show_result(client, data_model):
+    response = client.get(f"/result/{data_model.id}")
     assert (
         response.status_code == OK
-    ), "GET-запрос к эндпоинту '/show_result' должен возвращать статус `200`"
-    response = client.post("/result/1")
+    ), "GET-запрос к странице '/show_result' должен возвращать статус `200`"
+    response = client.post(f"/result/{data_model.id}")
     assert (
         response.status_code == METHOD_NOT_ALLOWED
-    ), "POST-запрос к эндпоинту `/result` запрещён"
+    ), "POST-запрос к странице `/result` запрещён"
 
 
 def test_page_ping(client):
     response = client.get("/ping")
     assert (
         response.status_code == OK
-    ), "GET-запрос к эндпоинту '/ping' должен возвращать статус `200`"
+    ), "GET-запрос к странице '/ping' должен возвращать статус `200`"
     response = client.post("/ping")
     assert (
         response.status_code == METHOD_NOT_ALLOWED
-    ), "POST-запрос к эндпоинту `/ping` запрещён"
+    ), "POST-запрос к странице `/ping` запрещён"
 
 
 def test_404(client):
