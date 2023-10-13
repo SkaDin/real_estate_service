@@ -51,7 +51,7 @@ def data_model(_app):
         id=1,
         number=3225003164320,
         latitude=53.248659,
-        longitude=34.35526,
+        longitude=34.355266,
     )
     return db_data
 
@@ -61,6 +61,6 @@ def query_data(_app):
     data = {
         "number": 3225003164320,
         "latitude": 53.248659,
-        "longitude": 34.35526,
+        "longitude": 34.355266,
     }
     return data
