@@ -13,6 +13,7 @@
 * #### Python 3.11
 * #### Flask 3.0.0
 * #### FastAPI 0.103.2
+* #### Docker 20.10.23
 * #### pytest 7.4.2
 * #### requests 2.31.0
 * #### SQLAlchemy 2.0.21
