@@ -7,20 +7,20 @@ class BuildingForm(FlaskForm):
     """Форма для поиска здания по заданным данным."""
 
     number = IntegerField(
-        "Примерный вид кадастрового номера: ХХ: ХХ: ХХХХХХХ: ХХ",
+        "Примерный вид кадастрового номера: 3228003164320 (вводить без символов,только цифры)",
         validators=[
             DataRequired(message="Поле обязательное!"),
         ],
     )
     latitude = StringField(
-        "Широта",
+        "Широта. Примерный вид `53.248659`",
         validators=[
             DataRequired(message="Поле обязательное"),
             Regexp(r"^-?\d{1,2}+.\d{6}$", message="Некорректный формат"),
         ],
     )
     longitude = StringField(
-        "Долгота",
+        "Долгота. Примерный вид `34.355260`",
         validators=[
             DataRequired(message="Поле обязательное"),
             Regexp(r"^-?\d{1,2}+.\d{6}$", message="Некорректный формат"),

@@ -7,7 +7,7 @@ fastapp = FastAPI()
 
 
 @fastapp.get("/")
-def show_test():
+async def show_test():
     """Простая эмуляция внешнего сервера."""
     value = random.choice(["True", "False"])
     return {"answer": value}

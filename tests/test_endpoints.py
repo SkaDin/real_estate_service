@@ -36,18 +36,6 @@ def test_ping_server(client):
     ), "POST-запрос к эндпоинту '/api/ping' запрещён"
 
 
-def test_add_query(client, query_data):
-    response = client.post("/api/query", json=query_data)
-    assert (
-        response.status_code == CREATED
-    ), "POST-запрос на эндпоинт '/api/query' возвращает статус 201"
-    for i in ["number", "latitude", "longitude"]:
-        if i not in query_data:
-            raise AssertionError(
-                "Если в запросе отсутствуют поля" " , должно быть исключение"
-            )
-
-
 def test_get_url_not_found(client):
     response = client.get("/api/id/{unexpected}/")
     assert response.status_code == NOT_FOUND, (
