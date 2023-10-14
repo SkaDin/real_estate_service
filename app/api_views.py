@@ -3,7 +3,14 @@ from requests.exceptions import ConnectionError
 
 from flask import jsonify, request
 
-from constants import NOT_FOUND, OK, CREATED, BAD_REQUEST, FASTAPI_URL, INTERNAL_SERVER_ERROR
+from constants import (
+    NOT_FOUND,
+    OK,
+    CREATED,
+    BAD_REQUEST,
+    FASTAPI_URL,
+    INTERNAL_SERVER_ERROR,
+)
 from app import app, db
 from app.models import Building
 from errors.error_handlers import InvalidAPIUsage
@@ -47,9 +54,7 @@ def add_query():
         db.session.add(db_obj)
         db.session.commit()
     except ConnectionError:
-        raise InvalidAPIUsage(
-            "Сервер не работает", INTERNAL_SERVER_ERROR
-        )
+        raise InvalidAPIUsage("Сервер не работает", INTERNAL_SERVER_ERROR)
     return jsonify({"data": db_obj.to_dict()}), CREATED
 
 
@@ -61,6 +66,4 @@ def ping_server():
         if response.status_code == OK:
             return jsonify({"message": "Сервер работает"})
     except ConnectionError:
-        raise InvalidAPIUsage(
-                "Сервер не работает", INTERNAL_SERVER_ERROR
-            )
+        raise InvalidAPIUsage("Сервер не работает", INTERNAL_SERVER_ERROR)
