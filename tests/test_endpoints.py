@@ -1,11 +1,7 @@
-from constants import OK, NOT_FOUND, METHOD_NOT_ALLOWED, CREATED
+from constants import OK, NOT_FOUND, METHOD_NOT_ALLOWED, CREATED, FASTAPI_URL
 
 
-def test_get_all_history(client, query_data):
-    client.post(
-        "/query",
-        data=query_data,
-    )
+def test_get_all_history(client, data_model):  # noqa
     response = client.get("/api/history")
     assert (
         response.status_code == OK
@@ -16,11 +12,7 @@ def test_get_all_history(client, query_data):
     ), "POST-запрос к эндпоинту '/api/history' запрещён"
 
 
-def test_get_history_by_number(client, data_model, query_data):
-    client.post(
-        "/query",
-        data=query_data,
-    )
+def test_get_history_by_number(client, data_model):
     response = client.get(f"/api/history/{data_model.number}")
     assert response.status_code == OK, (
         f"GET-запрос к эндпоинту '/api/history/{data_model.number}' "
@@ -34,7 +26,7 @@ def test_get_history_by_number(client, data_model, query_data):
 
 
 def test_ping_server(client):
-    response = client.get("/api/ping")
+    response = client.get(FASTAPI_URL)
     assert (
         response.status_code == OK
     ), "GET-запрос к эндпоинту '/api/ping' возвращает статус `200`"

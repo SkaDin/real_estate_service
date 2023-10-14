@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+FASTAPI_URL = "http://localhost:8000/"
 OK = HTTPStatus.OK
 FORBIDDEN = HTTPStatus.FORBIDDEN
 INTERNAL_SERVER_ERROR = HTTPStatus.INTERNAL_SERVER_ERROR

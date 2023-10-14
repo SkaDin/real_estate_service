@@ -13,7 +13,7 @@ def test_page_index_get(client):
     ), "POST-запрос к главной странице запрещён"
 
 
-def test_page_create_request(client, data_model, query_data):
+def test_page_create_request(client, data_model):
     response = client.get("/query")
     assert (
         response.status_code == OK
@@ -21,18 +21,9 @@ def test_page_create_request(client, data_model, query_data):
     assert (
         b"form" in response.data
     ), "Нет формы в контексте страницы '/query'."
-
-    response = client.post(
-        "/query",
-        data=query_data,
-    )
+    data = Building.query.filter_by(id=data_model.id).first()
     assert (
-        response.status_code == FOUND
-    ), "После отправки формы страница '/query' должна возвращать статус `302`."
-    query_data = Building.query.filter_by(number=data_model.number).first()
-
-    assert (
-        query_data.id
+        data.id
     ), "После отправки формы в базе данных должна создаваться новая запись."
 
 

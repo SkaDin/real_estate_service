@@ -46,14 +46,11 @@ def client(_app):
 
 
 @pytest.fixture
-def data_model(_app):
-    db_data = Building(
-        id=1,
-        number=3225003164320,
-        latitude=53.248659,
-        longitude=34.355266,
-    )
-    return db_data
+def data_model(_app, query_data):
+    building = Building(**query_data, answer="Test answer")
+    db.session.add(building)
+    db.session.commit()
+    return building
 
 
 @pytest.fixture

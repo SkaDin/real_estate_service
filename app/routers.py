@@ -1,13 +1,15 @@
 import csv
+import requests
 import click
-import random
 from datetime import datetime
 
-from flask import render_template, redirect, url_for
+from requests.exceptions import ConnectionError
+from flask import render_template, redirect, url_for, flash
 
 from app import app, db
 from app.forms import BuildingForm
 from app.models import Building
+from constants import OK, FASTAPI_URL
 
 
 @app.route("/")
@@ -25,8 +27,13 @@ def show_result(pk: int):
 
 def send_request(number, latitude, longitude):  # noqa
     """Эмуляция запроса на сервер."""
-    response = random.choice(["True", "False"])
-    return response
+    try:
+        response = requests.get(FASTAPI_URL)
+        if response.status_code == OK:
+            return response.json().get("answer")
+    except ConnectionError:
+        flash("Сервер недоступен. Попробуйте позже.")
+        return None
 
 
 @app.route("/query", methods=["GET", "POST"])
@@ -38,6 +45,8 @@ def create_request():
         latitude = form.latitude.data
         longitude = form.longitude.data
         result = send_request(number, latitude, longitude)
+        if not result:
+            return render_template("query.html", form=form)
         building = Building(
             number=number,
             latitude=latitude,
@@ -53,9 +62,12 @@ def create_request():
 @app.route("/ping", methods=["GET"])
 def check_server():
     """Проверка работоспособности сервера."""
-    if send_request(number=None, longitude=None, latitude=None):
-        return render_template("ping.html", context="Работает")
-    return render_template("ping.html", context="Не работает")
+    try:
+        response = requests.get(FASTAPI_URL)
+        if response.status_code == OK:
+            return render_template("ping.html", context="Работает")
+    except ConnectionError:
+        return render_template("ping.html", context="Не работает")
 
 
 @app.cli.command("load_data")

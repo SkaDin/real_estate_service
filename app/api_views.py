@@ -1,8 +1,9 @@
-import random
+import requests as req
+from requests.exceptions import ConnectionError
 
 from flask import jsonify, request
 
-from constants import NOT_FOUND, OK, CREATED, BAD_REQUEST
+from constants import NOT_FOUND, OK, CREATED, BAD_REQUEST, FASTAPI_URL, INTERNAL_SERVER_ERROR
 from app import app, db
 from app.models import Building
 from errors.error_handlers import InvalidAPIUsage
@@ -31,24 +32,35 @@ def get_all_history():
 @app.route("/api/query", methods=["GET", "POST"])
 def add_query():
     """Запрос к внешнему серверу за информацией/получение ответа."""
-    data = request.get_json()
-    answer = random.choice(["True", "False"])
-    data["answer"] = answer
-    for i in ["number", "latitude", "longitude"]:
-        if i not in data:
-            raise InvalidAPIUsage(
-                "В запросе отсутствуют обязательные поля", BAD_REQUEST
-            )
-    # Имитация запроса к внешнему серверу.
-    db_obj = Building()
-    db_obj.from_dict(data)
-    db.session.add(db_obj)
-    db.session.commit()
+    try:
+        data = request.get_json()
+        answer = req.get(FASTAPI_URL).json().get("answer")
+        data["answer"] = answer
+        for i in ["number", "latitude", "longitude"]:
+            if i not in data:
+                raise InvalidAPIUsage(
+                    "В запросе отсутствуют обязательные поля", BAD_REQUEST
+                )
+        # Имитация запроса к внешнему серверу.
+        db_obj = Building()
+        db_obj.from_dict(data)
+        db.session.add(db_obj)
+        db.session.commit()
+    except ConnectionError:
+        raise InvalidAPIUsage(
+            "Сервер не работает", INTERNAL_SERVER_ERROR
+        )
     return jsonify({"data": db_obj.to_dict()}), CREATED
 
 
 @app.route("/api/ping", methods=["GET"])
 def ping_server():
     """Проверка работоспособности сервера."""
-    ping = random.choice(["Сервер... Запущен", "Сервер... Не работает"])
-    return jsonify({"status_server": ping}), OK
+    try:
+        response = req.get(FASTAPI_URL)
+        if response.status_code == OK:
+            return jsonify({"message": "Сервер работает"})
+    except ConnectionError:
+        raise InvalidAPIUsage(
+                "Сервер не работает", INTERNAL_SERVER_ERROR
+            )
