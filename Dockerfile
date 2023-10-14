@@ -31,4 +31,4 @@ ENV SECRET_KEY=My_favorite_micro-framework_is_FLASK!
 ENV BASIC_AUTH_USERNAME=microchel
 ENV BASIC_AUTH_PASSWORD=microchel007
 
-CMD sh -c "flask run --host=0.0.0.0 & uvicorn server:fastapp --host=0.0.0.0 --port=8000"
+CMD sh -c "flask load_data &&flask run --host=0.0.0.0 & uvicorn server:fastapp --host=0.0.0.0 --port=8000"
