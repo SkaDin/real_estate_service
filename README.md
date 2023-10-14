@@ -57,5 +57,20 @@ flask load_data
 ```commandline
 flask run
 ```
+* #### *Добавлен Dockerfile и работа с образом:*
+1. Перейти в корень приложения(Где лежит Dockerfile)
+2. Создать образ приложения:
+```commandline
+sudo docker build -t real_estate_service . 
+```
+3. Затем, когда образ соберёт контейнер, запустить его:
+```commandline
+sudo docker run -p 5000:5000 -p 8000:8000 real_estate_service
+```
+4. Не забыть удалить образы и контейнеры которые не нужны:
+```commandline
+sudo docker container rm -f ID_CONTAINER
+sudo docker image rm -f ID_IMAGE
+```
 * #### *Автор: SkaDin(Денис Сушков)*
 
