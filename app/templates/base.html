@@ -1,0 +1,45 @@
+{% extends 'bootstrap/base.html' %}
+{% block title %}
+  Building
+{% endblock %}
+{% block navbar %}
+<div class="cover-container">
+      <div class="masthead clearfix">
+        <div class="inner">
+          <h3 class="masthead-brand">Building</h3>
+          <nav>
+            <ul class="nav masthead-nav">
+              <li class="active"><a href="{{ url_for('index') }}">Домашняя страница</a></li>
+              <li><a href="{{ url_for('check_server') }}">Проверка сервера</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+</div>
+{% endblock %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='css/cover.css')}}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% block app_content %}
+    <div class="mastfoot">
+        <div class="inner">
+          <p>My contacts:
+            <a href="https://vk.com/id111880196">VK</a>
+            <a href="https://t.me/gopherAgronomist">Telegram</a>
+            <a href="https://github.com/SkaDin">GitHub</a>
+          </p>
+        </div>
+      </div>
+    {% endblock %}
+</div>
+{% endblock %}

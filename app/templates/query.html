@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %} Получить информацию {% endblock %}
+{% block app_content %}
+<div class="cover-container">
+    <div class="cover-container">
+        <div class="inner">
+            <div class="inner">
+                <div class="inner">
+                    <div class="col-12 col-lg-7">
+                        {{ wtf.quick_form(form) }}
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <img class="img-fluid mx-auto d-block" src="{{ url_for('static', filename='img/builder2.png') }}" alt="" draggable="false" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
